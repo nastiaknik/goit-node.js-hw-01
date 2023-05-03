@@ -1,4 +1,6 @@
 const contacts = require("./contacts");
+const argv = require("yargs").argv;
+const { hideBin } = require("yargs/helpers");
 
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
@@ -52,3 +54,7 @@ invokeAction({ action: "listContacts" });
 // });
 
 // invokeAction({ action: "removeContact", id: "7Fxon7QUsar22B3lBp0TL" });
+
+const arr = hideBin(process.argv);
+console.log(argv);
+invokeAction(argv);
