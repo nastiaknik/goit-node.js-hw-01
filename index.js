@@ -1,22 +1,21 @@
 const contacts = require("./contacts");
-const argv = require("yargs").argv;
-const { hideBin } = require("yargs/helpers");
+const { program } = require("commander");
 
 const invokeAction = async ({ action, id, name, email, phone }) => {
   switch (action) {
-    case "listContacts":
+    case "list":
       const allContacts = await contacts.listContacts();
-      return console.log(allContacts);
+      return console.table(allContacts);
 
-    case "getContactById":
+    case "get":
       const oneContact = await contacts.getContactById(id);
       return console.log(oneContact);
 
-    case "addContact":
+    case "add":
       const newContact = await contacts.addContact(name, email, phone);
       return console.log(newContact);
 
-    case "updateContact":
+    case "update":
       const updateContact = await contacts.updateContact(
         id,
         name,
@@ -25,7 +24,7 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
       );
       return console.log(updateContact);
 
-    case "removeContact":
+    case "remove":
       const removeContact = await contacts.removeContact(id);
       return console.log(removeContact);
 
@@ -34,27 +33,14 @@ const invokeAction = async ({ action, id, name, email, phone }) => {
   }
 };
 
-invokeAction({ action: "listContacts" });
+program
+  .option("-a, --action <type>", "choose action")
+  .option("-i, --id <type>", "user id")
+  .option("-n, --name <type>", "user name")
+  .option("-e, --email <type>", "user email")
+  .option("-p, --phone <type>", "user phone");
 
-// invokeAction({ action: "getContactById", contactId: "e6ywwRe4jcqxXfCZOj_1e" });
+program.parse();
 
-// invokeAction({
-//   action: "addContact",
-//   name: "Nugget",
-//   email: "nugget@gmail.com",
-//   phone: "(+48)73398793",
-// });
-
-// invokeAction({
-//   action: "updateContact",
-//   id: "e6ywwRe4jcqxXfCZOj_1e",
-//   name: "Burnt Nugget",
-//   email: "burnt.nugget@gmail.com",
-//   phone: "+48 73398793",
-// });
-
-// invokeAction({ action: "removeContact", id: "7Fxon7QUsar22B3lBp0TL" });
-
-const arr = hideBin(process.argv);
-console.log(argv);
-invokeAction(argv);
+const options = program.opts();
+invokeAction(options);
